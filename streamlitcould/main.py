@@ -1,5 +1,7 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Initialiseren van DataFrames voor klantgegevens, voorraad en contacten
 if 'klantgegevens' not in st.session_state:
@@ -67,7 +69,21 @@ if pagina == "CRM":
 
 elif pagina == "Dashboard":
     st.title('Dashboard')
-    st.write("Hier kun je een overzicht van belangrijke metrics en statistieken zien.")
+
+    # Genereer willekeurige bezoekersgegevens voor de afgelopen 30 dagen
+    datums = pd.date_range(start='30 days ago', end='today', freq='D')
+    bezoekers = np.random.poisson(lam=100, size=len(datums))
+    bezoekers_df = pd.DataFrame({'Datum': datums, 'Bezoekers': bezoekers})
+
+    # Toon de bezoekersgegevens in een grafiek
+    st.subheader('Website Bezoekers per Dag')
+    fig, ax = plt.subplots()
+    ax.plot(bezoekers_df['Datum'], bezoekers_df['Bezoekers'], marker='o')
+    ax.set_xlabel('Datum')
+    ax.set_ylabel('Aantal Bezoekers')
+    ax.set_title('Website Bezoekers per Dag')
+    ax.grid(True)
+    st.pyplot(fig)
 
 elif pagina == "Voorraad":
     st.title('Voorraadbeheer')
@@ -106,4 +122,3 @@ elif pagina == "Contacten":
     # Toon de huidige contactgegevens
     st.header('Contactgegevens')
     st.dataframe(st.session_state.contacten)
-
