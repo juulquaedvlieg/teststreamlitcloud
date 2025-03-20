@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from datetime import datetime, timedelta
 
 # Initialiseren van DataFrames voor klantgegevens, voorraad en contacten
 if 'klantgegevens' not in st.session_state:
@@ -71,7 +72,9 @@ elif pagina == "Dashboard":
     st.title('Dashboard')
 
     # Genereer willekeurige bezoekersgegevens voor de afgelopen 30 dagen
-    datums = pd.date_range(start='30 days ago', end='today', freq='D')
+    einddatum = datetime.now()
+    startdatum = einddatum - timedelta(days=30)
+    datums = pd.date_range(start=startdatum, end=einddatum, freq='D')
     bezoekers = np.random.poisson(lam=100, size=len(datums))
     bezoekers_df = pd.DataFrame({'Datum': datums, 'Bezoekers': bezoekers})
 
